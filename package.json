@@ -1,0 +1,37 @@
+{
+  "name": "com.example.hello",
+  "displayName": "IdleGame",
+  "version": "1.0.0",
+  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "main": "index.js",
+  "scripts": {
+    "check": "bun www/src/dataChecker.mts",
+    "compile-watch": "bun run tsc -w",
+    "live-watch": "bun run nodemon --watch www/src --exec \"cordova prepare browser\" --ext html,css,js,ts",
+    "live-serve": "bun run live-server --open=\"platforms/browser/www\" --watch=\"platforms/browser/www\"",
+    "tailwind-build": "tailwindcss -i ./www/css/index.css -o ./www/compiledcss/index.css --watch",
+    "start": "bun run live-watch & bun run live-serve & bun run compile-watch"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Apache Cordova Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "cordova-android": "^12.0.1",
+    "cordova-browser": "^7.0.0",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.2.2"
+  },
+  "cordova": {
+    "platforms": [
+      "android",
+      "browser"
+    ]
+  },
+  "dependencies": {
+    "awesome-typescript-loader": "^5.2.1",
+    "nodemon": "^3.0.1",
+    "npm-run-all": "^4.1.5"
+  }
+}

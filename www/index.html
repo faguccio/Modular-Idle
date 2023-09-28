@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <!--
+        Customize this policy to fit your own app's needs. For more guidance, please refer to the docs:
+            https://cordova.apache.org/docs/en/latest/
+        Some notes:
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src 
+
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" /> DISABLED FOR LIVERELOAD-->
+    <meta
+      name="viewport"
+      content="initial-scale=1, width=device-width, viewport-fit=cover"
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="css/index.css" />
+    <!-- <link rel="stylesheet" href="compiledcss/index.css" /> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <title>nn-idle-game</title>
+  </head>
+
+  <body>
+    <div class="app">
+      <div
+        class="bg-green-300 flex flex-row justify-around py-4"
+        id="navbar"
+      ></div>
+
+      <div id="screen"></div>
+    </div>
+
+    <!-- Defining all the templates which will be used to place in UI -->
+    <template id="resource-card-template">
+      <div class="m-3">
+        <h2 id="title" class="text-xl ml-4">Titolo</h2>
+        <div class="p-3 my-1 mx-3 bg-orange-200">
+          <div class="relative pt-1">
+            <div
+              class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-pink-200"
+            >
+              <div
+                id="bar"
+                style="width: 0%"
+                class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-pink-500"
+              ></div>
+            </div>
+          </div>
+
+          <div class="flex flex-row">
+            <p class="mr-5">Amount:</p>
+            <p id="amount">tbl</p>
+          </div>
+
+          <div class="flex flex-row">
+            <p class="mr-5">Max:</p>
+            <p id="max-amount">tbl</p>
+          </div>
+
+          <div class="flex flex-row">
+            <p class="mr-5">Rate:</p>
+            <p id="rate" class="px-2 rounded-lg">tbl</p>
+          </div>
+
+          <div class="my-2">
+            <div class="flex flex-row mb-1">
+              <h3 class="text-lg mr-5">Workers:</h3>
+              <p id="workers-amount" class="text-lg">tbl</p>
+            </div>
+
+            <div
+              id="workers-button-container"
+              class="flex flex-row justify-around"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- Population management -->
+    <template id="population-card-template">
+      <div class="m-3">
+        <h2 id="title" class="text-2xl weight-500 ml-4">Titolo</h2>
+        <div class="p-3 my-1 mx-3 bg-orange-200">
+          <div class="relative pt-1 mx-1">
+            <div
+              class="overflow-hidden h-4 mb-4 text-xs flex rounded bg-emerald-200"
+            >
+              <div
+                id="working-bar"
+                style="width: 0%"
+                class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-orange-500"
+              ></div>
+              <div
+                id="idle-bar"
+                style="width: 0%"
+                class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-500"
+              ></div>
+            </div>
+          </div>
+
+          <div class="flex flex-row justify-around">
+            <div class="flex flex-row">
+              <p class="mr-2">Free:</p>
+              <p id="amount">tbl</p>
+            </div>
+
+            <div class="flex flex-row">
+              <p class="mr-2">Total:</p>
+              <p id="total">tbl</p>
+            </div>
+
+            <div class="flex flex-row">
+              <p class="mr-2">Max:</p>
+              <p id="max">tbl</p>
+            </div>
+          </div>
+
+          <div id="consume-container"></div>
+
+          <div class="m-5">
+            <div
+              id="button-container"
+              class="flex flex-row justify-around"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <script src="cordova.js"></script>
+    <script type="module" src="js/index.js"></script>
+  </body>
+</html>
