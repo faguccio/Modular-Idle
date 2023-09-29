@@ -81,3 +81,20 @@ export function OTCostSatisfied(primary: OTCostType, multiplier: number) {
   const amountToBeConsumed = primary.amount * multiplier;
   return amountToBeConsumed <= primaryAmount;
 }
+
+export function enableButton(button: Element): void {
+  if (button.classList.contains("bg-slate-100")) return;
+  removeClasses(button, ["bg-slate-400"]);
+  addClasses(button, ["bg-slate-100"]);
+  //@ts-ignore
+  button.disabled = false;
+}
+
+export function disableButton(button: Element): void {
+  if (button.classList.contains("bg-slate-400")) return;
+  removeClasses(button, ["bg-slate-100"]);
+  addClasses(button, ["bg-slate-400"]);
+
+  //@ts-ignore
+  button.disabled = true;
+}

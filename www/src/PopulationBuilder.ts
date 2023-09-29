@@ -6,6 +6,8 @@ import {
   validateBaseElement,
   createBaseElement,
   OTCostSatisfied,
+  enableButton,
+  disableButton,
 } from "./utils.js";
 import {
   OTCostType,
@@ -94,36 +96,66 @@ function populationCardCreation(
 function updateDisplay(pop: Population) {
   getElement(`amount ${pop.id}`).textContent = pop.amount.toString();
   getElement(`total ${pop.id}`).textContent = pop.total.toString();
+  getElement(`working-bar ${pop.id}`).style["width"] =
+    (((pop.total - pop.amount) * 100) / pop.max).toString() + "%";
+  getElement(`idle-bar ${pop.id}`).style.width =
+    ((pop.amount * 100) / pop.max).toString() + "%";
   updateButtonWidget(pop);
 }
 
 function produceWorkers(pop: Population, amount: number) {
-  console.log(amount);
+  payOTCost(pop, amount);
+  pop.amount += amount;
+  pop.total += amount;
+  updateDisplay(pop);
+}
+
+function checkOTConditions(pop: Population, val: number): boolean {
+  const condition = pop.cost.map((otcost) => {
+    return OTCostSatisfied(otcost, val);
+  });
+  return condition.every((cond) => cond);
+}
+
+function payOTCost(pop: Population, buySize: number): void {
+  pop.cost.map((otcost) => {
+    otcost.ref.amount -= buySize * otcost.amount;
+  });
+}
+
+function checkKeepAliveConditions(pop: Population): boolean {
+  const condition = pop.autoCost.map((autoCost) => {
+    return autoCost.ref.amount > pop.amount * autoCost.costRate;
+  });
+  return condition.every((cond) => cond);
+}
+
+function payKeepAlive(pop: Population): void {
+  pop.autoCost.map((autoCost) => {
+    autoCost.ref.amount -= pop.amount * autoCost.costRate;
+  });
 }
 
 function updateButtonWidget(pop: Population) {
   const buttonsContainer = getElement(`button-container ${pop.id}`);
   Array.from(buttonsContainer.children).map((button) => {
     const val = Number(button.textContent);
-    const condition = pop.cost.map((otcost) => {
-      return OTCostSatisfied(otcost, val);
-    });
-    if (condition.every((cond) => cond)) {
-      if (button.classList.contains("bg-slate-100")) return;
-      removeClasses(button, ["bg-slate-400"]);
-      addClasses(button, ["bg-slate-100"]);
-      //@ts-ignore
-      button.disabled = false;
+    if (checkOTConditions(pop, val) && pop.total + val <= pop.max) {
+      enableButton(button);
       return;
     }
-
-    if (button.classList.contains("bg-slate-400")) return;
-    removeClasses(button, ["bg-slate-100"]);
-    addClasses(button, ["bg-slate-400"]);
-
-    //@ts-ignore
-    button.disabled = true;
+    disableButton(button);
+    return;
   });
+}
+
+function keepWorkersAlive(pop: Population) {
+  if (checkKeepAliveConditions(pop)) {
+    payKeepAlive(pop);
+  } else {
+    //make people die
+    console.log("People dying");
+  }
 }
 
 import { populationData } from "./data.mjs";
@@ -142,9 +174,7 @@ export function producePopulationCardManager(): CardManager {
     templateCardId: "population-card-template",
     buttonContainedId: "button-container",
     createCardCallback: populationCardCreation,
-    tickRecivedCallback: (pop: Population) => {
-      //kill starving man
-    },
+    tickRecivedCallback: keepWorkersAlive,
     updateDisplayCallback: updateDisplay,
     buttonPayAndGetCallback: produceWorkers,
     updateButtonDisplayCallback: updateButtonWidget,
